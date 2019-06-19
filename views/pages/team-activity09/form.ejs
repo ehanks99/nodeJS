@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script>
+        function query() {
+            let lhs = document.getElementById('lhs').value;
+            let operation = document.getElementById('operation').value;
+            let rhs = document.getElementById('rhs').value;
+
+            if (operation == "+") {
+                operation = "%2B";
+            } else if (operation == "/") {
+                operation = "%2F";
+            }
+
+            $.get("./math_service?lhs=" + lhs + "&operation=" + operation + "&rhs=" + rhs, function(endResult) {
+                //$("resultDiv").html(endResult.result);
+                document.getElementById("resultDiv").innerHTML = "\nResult: " + endResult.result;
+            });
+        }
+    </script>
+</head>
+<body>
+    <form action="./math" method="GET">
+        <div class="form-group">
+          <input type="text" class="form-control" name="lhs" id="lhs" aria-describedby="helpId" placeholder="">
+          <input type="text" class="form-control" name="operation" id="operation" aria-describedby="helpId" placeholder="">
+          <input type="text" class="form-control" name="rhs" id="rhs" aria-describedby="helpId" placeholder="">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" onclick="query()">AJAX</button>
+    </form>
+    <div id="resultDiv"></div>
+</body>
+</html>
