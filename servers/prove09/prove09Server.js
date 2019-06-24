@@ -2,9 +2,9 @@ var express = require("express");
 var url = require("url");
 var app = express();
 
-app.use(express.static("public/prove09"));
+app.use(express.static("../../public/prove09"));
 
-app.set("views", "views/prove09");
+app.set("views", "../../views/prove09");
 app.set("view engine", "ejs");
 
 app.get("/getRate", function(request, response) {
