@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Postal Rate Calculator</title>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <h2>Calculate the Postal Rate for your mail</h2>
+    <form action="/getRate" method="get">
+        <div class="form-group">
+          <label for="weight">Weight of Item (in ounces)</label>
+          <input type="text" class="form-control" id="weight" name="weight">
+        </div><br/>
+        <h3>Select the type of mail</h3>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioButtons" id="stampedLetters" value="stampedLetters" checked>
+            <label class="form-check-label" for="stampedLetters">
+              Letters (Stamped)
+            </label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioButtons" id="meteredLetters" value="meteredLetters">
+            <label class="form-check-label" for="meteredLetters">
+              Letters (Metered)
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioButtons" id="largeEnv" value="largeEnv">
+            <label class="form-check-label" for="largeEnv">
+              Large Envelopes (Flats)
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="radioButtons" id="firstClass" value="firstClass">
+            <label class="form-check-label" for="firstClass">
+                First-Class Packeage Service--Retail
+            </label>
+        </div><br/>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+</body>
+</html>
