@@ -2,12 +2,12 @@ var express = require("express");
 var url = require("url");
 var app = express();
 
-app.use(express.static("../../public/prove09"));
+app.use(express.static("public"));
 
-app.set("views", "../../views/prove09");
+app.set("views", "views");
 app.set("view engine", "ejs");
 
-app.get("/getRate", function(request, response) {
+app.get("/ponder09/getRate", function(request, response) {
     console.log("Received a request for /getRate");
     var query = url.parse(request.url, true).query;
     var params = { weight: Number(query.weight), type: query.radioButtons };
