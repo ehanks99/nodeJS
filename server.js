@@ -2,6 +2,7 @@ var express = require("express");
 var url = require("url");
 var app = express();
 
+app.set("port", (process.env.PORT || 5000));
 app.use(express.static("/public"));
 app.set("views", "views");
 app.set("view engine", "ejs");
@@ -65,8 +66,13 @@ app.get("/prove09/getRate", function(request, response) {
 
 
 /***********************************************************
+ * teamActivity10 stuff 
+ **********************************************************/
+
+
+/***********************************************************
  * set the server listening 
  **********************************************************/ 
-app.listen(5000, function() {
+app.listen(app.get("port"), function() {
 	console.log("The server is up and listening on port 5000");
 });
