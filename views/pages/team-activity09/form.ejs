@@ -19,7 +19,7 @@
                 operation = "%2F";
             }
 
-            $.get("./math_service?lhs=" + lhs + "&operation=" + operation + "&rhs=" + rhs, function(endResult) {
+            $.get("team-activity09/math_service?lhs=" + lhs + "&operation=" + operation + "&rhs=" + rhs, function(endResult) {
                 //$("resultDiv").html(endResult.result);
                 document.getElementById("resultDiv").innerHTML = "\nResult: " + endResult.result;
             });
@@ -27,7 +27,7 @@
     </script>
 </head>
 <body>
-    <form action="./math" method="GET">
+    <form action="team-activity09/math" method="GET">
         <div class="form-group">
           <input type="text" class="form-control" name="lhs" id="lhs" aria-describedby="helpId" placeholder="">
           <input type="text" class="form-control" name="operation" id="operation" aria-describedby="helpId" placeholder="">

@@ -79,8 +79,16 @@
                 rate = getFirstClassRate(weight);
             }
 
-            document.getElementById("result").innerHTML = "The postal rate for \"" + type + 
-                "\" weighing " + weight + " ounce(s) is $" + rate.toFixed(2);
+            if (isNaN(rate))
+            {
+                document.getElementById("result").innerHTML = "The postal rate for \"" + type + 
+                    "\" weighing " + weight + " ounce(s) is unknown... The weight is probably too large.";
+            }
+            else
+            {
+                document.getElementById("result").innerHTML = "The postal rate for \"" + type + 
+                    "\" weighing " + weight + " ounce(s) is $" + (Number(rate)).toFixed(2);
+            }
         }
     </script>
 </head>
