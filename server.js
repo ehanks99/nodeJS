@@ -2,7 +2,7 @@ var express = require("express");
 var url = require("url");
 var app = express();
 
-app.use(express.static("public"));
+app.use(express.static("/public"));
 app.set("views", "views");
 app.set("view engine", "ejs");
 
