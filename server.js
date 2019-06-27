@@ -72,7 +72,7 @@ const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL || "postgres://familyhistoryuser:elijah@localhost:5432/familyhistory";
 const pool = new Pool({connectionString: connectionString});
 
-app.get("/person/:id", getPerson);
+app.get("/team-activity10/person/:id", getPerson);
 
 function getPerson(request, response) {
     console.log("Getting person information.");
