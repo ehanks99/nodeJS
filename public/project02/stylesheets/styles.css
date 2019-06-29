@@ -1,0 +1,114 @@
+ .picture
+ {
+    height: 150px; 
+    width: auto; 
+    margin-left: 20px; 
+    margin-right: 20px;
+ }
+
+ .main-picture
+ {
+    height: 300px; 
+    width: auto; 
+    margin-left: 25px; 
+    margin-right: 25px;
+ }
+
+.myNavbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.myNavbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.myDropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.myDropdown .myDropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.myNavbar a:hover, .myDropdown:hover .myDropbtn {
+  background-color: red;
+}
+
+.myDropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.myDropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.myDropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.myDropdown:hover .myDropdown-content {
+  display: block;
+}
+
+.myNavbar .search-container {
+  float: right;
+}
+
+.myNavbar input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.myNavbar .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+  .myNavbar .search-container {
+    float: none;
+  }
+  .myNavbar a, .myNavbar input[type=text], .myNavbar .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .myNavbar input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}

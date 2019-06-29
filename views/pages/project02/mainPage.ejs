@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Rentals</title>
+    <% include ../../partials/project02/header.ejs %>
+</head>
+    <script>
+        var movieArray;
+        function query() {
+            $.get("/project02/getAllMovieData", function(returnedInfo) {
+                movieArray = returnedInfo.movieArray;
+
+                var divString = "";
+                for(var i = 0; i < movieArray.movies.length; i++) {
+        
+                    divString += "<div class='row'>\n" +
+                        "<div class='col-md-2'><p></p></div>\n" +
+                            "<div class='col-md-8'>\n" +
+                                "<div class = 'pull-left'>\n" +
+                                    "<img src = 'movie_pictures/" + movieArray.movies[i].picture_filepath + "' class = 'picture'>\n" +
+                                "</div>\n" +
+                                "<div>\n" +
+                                    "<h4>" + movieArray.movies[i].movie_name + "</h4><hr>\n" +
+                                    "<h5><b>Director(s): </b>";
+
+                                    for(var j = 0; j < movieArray.movies[i].directors.length; j++) {
+                                        divString += movieArray.movies[i].directors[j].director_name;
+                                        if (j != movieArray.movies[i].directors.length - 1)
+                                            divString += ", ";
+                                    }
+
+                                    divString += "</h5>\n" +
+                                     "<h5><b>Starring Actors: </b>";
+                            
+                                    for(var j = 0; j < movieArray.movies[i].actors.length; j++) {
+                                        divString += movieArray.movies[i].actors[j].actor_name;
+                                        if (j != movieArray.movies[i].actors.length - 1)
+                                            divString += ", ";
+                                    }
+                            
+                                    divString += "</h5>\n" +
+                                     "<h5><b>Genres: </b>";
+
+                                    for(var j = 0; j < movieArray.movies[i].genres.length; j++) {
+                                        divString += movieArray.movies[i].genres[j].genre_type;
+                                        if (j != movieArray.movies[i].genres.length - 1)
+                                            divString += ", ";
+                                    }
+                            
+                                    divString += "</h5><br/>\n\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n" +                             
+                                     "<button type='button' class='btn btn-secondary' onclick='goToDetails(\"" + movieArray.movies[i].movie_name + "\")'>View Details</button>\n" +
+                                "</div>\n" +
+                                "<hr>\n" +
+                            "</div>\n" +
+                        "</div>\n";
+                }
+
+                document.getElementById("loadingText").innerHTML = "";
+                document.getElementById("movies").innerHTML = divString;
+            });
+        }
+    </script>
+<body onload="query()">
+    <% include ../../partials/project02/navbar.ejs %>
+    <!--navbar goes here-->
+    <br/><h2 class = "text-center">Movie Selections</h2><br/><hr>
+
+    <h3 id="loadingText" class="text-center">Loading the movies ...</h3>
+    <div id="movies"></div>
+</body>
+</html>
