@@ -1,10 +1,13 @@
 const { Pool } = require("pg");
-const async = require('async');
-const connectionString2 = process.env.DATABASE_URL;
-const pool2 = new Pool({connectionString: connectionString2});
+//const async = require('async');
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({connectionString: connectionString});
 let res;
 let count = 0;
 let numRows = 20;
+
+
+let url = require("url");
 
 
 function collectAllMovieData(request, response) {
@@ -67,7 +70,7 @@ function selectAllMovieDataQuery(callback) {
     console.log("inside the \"selectAllMovieDataQuery\" functions");
     var sql = "SELECT movie.movie_id, movie.movie_name, movie.movie_rating, movie.picture_filepath, movie.movie_summary FROM movie;";
 
-    pool2.query(sql, function(error, result) {
+    pool.query(sql, function(error, result) {
         if (error) {
             console.log("An error with the DB occurred");
             console.log("ERROR: " + error);
@@ -80,10 +83,10 @@ function selectAllMovieDataQuery(callback) {
     });
 }
 
-// This runSqlQuery function is made specifically to update an existing array
+// This runSpecializedSqlQuery function is made specifically to update an existing array
 // with the data found from the query
-function runSqlQuery(sql, params, callback, index, movieArray) {
-    pool2.query(sql, params, function(error, result) {
+function runSpecializedSqlQuery(sql, params, callback, index, movieArray) {
+    pool.query(sql, params, function(error, result) {
         if (error) {
             console.log("An error with the DB occurred");
             console.log("ERROR: " + error);
@@ -102,7 +105,7 @@ function queryDirectorsForGivenMovieName(index, movieArray, movieName) {
               "  INNER JOIN director ON movie_to_director.director_id = director.director_id " +
               "WHERE movie.movie_name = $1";
     var params = [movieName];
-    runSqlQuery(sql, params, addDirectorsToMovie, index, movieArray);
+    runSpecializedSqlQuery(sql, params, addDirectorsToMovie, index, movieArray);
 }
 
 function addDirectorsToMovie(error, index, movieArray, directorArray) {
@@ -124,7 +127,7 @@ function queryActorsForGivenMovieName(index, movieArray, movieName) {
               "  INNER JOIN starring_actor ON movie_to_starring_actor.actor_id = starring_actor.actor_id " +
               "WHERE movie.movie_name = $1";
     var params = [movieName];
-    runSqlQuery(sql, params, addActorsToMovie, index, movieArray);
+    runSpecializedSqlQuery(sql, params, addActorsToMovie, index, movieArray);
 }
 
 function addActorsToMovie(error, index, movieArray, actorArray) {
@@ -146,7 +149,7 @@ function queryGenresForGivenMovieName(index, movieArray, movieName) {
               "  INNER JOIN genre ON movie_to_genre.genre_id = genre.genre_id " +
               "WHERE movie.movie_name = $1";
     var params = [movieName];
-    runSqlQuery(sql, params, addGenresToMovie, index, movieArray);
+    runSpecializedSqlQuery(sql, params, addGenresToMovie, index, movieArray);
 }
 
 function addGenresToMovie(error, index, movieArray, genreArray) {
@@ -172,7 +175,7 @@ function addGenresToMovie(error, index, movieArray, genreArray) {
             try {
                 //response.render("/project02/mainPage", { movieArray: movieArray});
                 console.log("movie information found, returning to mainPage");
-                res.json({"movieArray": movieArray}); 
+                res.json({success:true, "movieArray": movieArray}); 
             }
             catch (error) {
                 console.log("ERROR: " + error);
@@ -182,6 +185,124 @@ function addGenresToMovie(error, index, movieArray, genreArray) {
     }
 }
 
+function runSqlQuery(sql, params, callback, response) {
+    pool.query(sql, params, function(error, result) {
+        if (error) {
+            console.log("An error with the DB occurred");
+            console.log("ERROR: " + error);
+            callback(error, null, response);
+        }
+        
+        callback(null, result.rows, response);
+    })
+}
+
+function sendResultsBack(error, results, response) {
+    if (error) {
+        response.status(500).json({success:false, error:error});
+    }
+    else {
+        //console.log(results);
+        response.json({success:true, results:results});
+    }
+}
+
+function getDirectors(request, response) {
+    let query = url.parse(request.url, true).query;
+
+    // we should be given a movie name in the query string
+    // we need to return the directors of the given movie
+    let movieName = query.movie;
+    var sql = "SELECT director.director_name " +
+              "FROM movie_to_director " +
+              "  INNER JOIN movie ON movie_to_director.movie_id = movie.movie_id " +
+              "  INNER JOIN director ON movie_to_director.director_id = director.director_id " +
+              "WHERE movie.movie_name = $1";
+    var params = [movieName];
+
+    // run the query and return the results
+    runSqlQuery(sql, params, sendResultsBack, response);
+}
+
+function getActors(request, response) {
+    let query = url.parse(request.url, true).query;
+
+    // we should be given a movie name in the query string
+    // we need to return the actors of the given movie
+    let movieName = query.movie;
+    var sql = "SELECT starring_actor.actor_name " +
+              "FROM movie_to_starring_actor " +
+              "  INNER JOIN movie ON movie_to_starring_actor.movie_id = movie.movie_id " +
+              "  INNER JOIN starring_actor ON movie_to_starring_actor.actor_id = starring_actor.actor_id " +
+              "WHERE movie.movie_name = $1";
+    var params = [movieName];
+
+    // run the query and return the results
+    runSqlQuery(sql, params, sendResultsBack, response);
+}
+
+function getGenres(request, response) {
+    let query = url.parse(request.url, true).query;
+
+    // we should be given a movie name in the query string
+    // we need to return the genres of the given movie
+    let movieName = query.movie;
+    var sql = "SELECT genre.genre_type " +
+              "FROM movie_to_genre " +
+              "  INNER JOIN movie ON movie_to_genre.movie_id = movie.movie_id " +
+              "  INNER JOIN genre ON movie_to_genre.genre_id = genre.genre_id " +
+              "WHERE movie.movie_name = $1";
+    var params = [movieName];
+
+    // run the query and return the results
+    runSqlQuery(sql, params, sendResultsBack, response);
+}
+
+function getMovies(request, response) {
+    let query = url.parse(request.url, true).query;
+    let sql;
+    let params;
+
+    // We could be sent an actor, director, or genre - depending on
+    // what is sent to us, we need to query the data a little different
+    if (query.director != null) {
+        sql = "SELECT movie.movie_name " +
+                  "FROM movie_to_director " +
+                  "  INNER JOIN movie ON movie_to_director.movie_id = movie.movie_id " +
+                  "  INNER JOIN director ON movie_to_director.director_id = director.director_id " +
+                  "WHERE director.director_name = $1";
+        params = [query.director];
+    }
+    else if (query.actor != null) {
+        sql = "SELECT movie.movie_name " +
+                  "FROM movie_to_starring_actor " +
+                  "  INNER JOIN movie ON movie_to_starring_actor.movie_id = movie.movie_id " +
+                  "  INNER JOIN starring_actor ON movie_to_starring_actor.actor_id = starring_actor.actor_id " +
+                  "WHERE starring_actor.actor_name = $1";
+        params = [query.actor];
+    }
+    else if (query.genre != null) {
+        sql = "SELECT movie.movie_name " +
+                  "FROM movie_to_genre " +
+                  "  INNER JOIN movie ON movie_to_genre.movie_id = movie.movie_id " +
+                  "  INNER JOIN genre ON movie_to_genre.genre_id = genre.genre_id " +
+                  "WHERE genre.genre_type = $1";
+        params = [query.genre];
+    }
+    else {
+        // we weren't sent anything, so we can only return null
+        console.log("we weren't given any search criteria for 'getMovies'");
+        response.json({success:true, movies:null});
+    }
+
+    // run the query and return the results
+    runSqlQuery(sql, params, sendResultsBack, response);
+}
+
 module.exports = {
-    collectAllMovieData: collectAllMovieData
+    collectAllMovieData: collectAllMovieData,
+    getDirectors: getDirectors,
+    getActors: getActors,
+    getGenres: getGenres,
+    getMovies: getMovies
 }
