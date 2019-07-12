@@ -8,6 +8,11 @@
         var movieArray;
         function query() {
             $.get("/project02/getAllMovieData", function(returnedInfo) {
+                if (returnedInfo.success == false) {
+                    document.getElementById("loadingText").innerHTML = "Something went wrong with the AJAX request...";
+                    return;
+                }
+
                 movieArray = returnedInfo.movieArray;
 
                 var divString = "";
