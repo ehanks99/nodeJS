@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit/Add</title>
+    <% include ../../partials/project02/header.ejs %>
+    
+	<script type="text/javascript" src="/functions/project02/editFunctions.js"></script>
+    <script>
+    </script>
+</head>
+<body onload="loadInfo()">
+    <!--navbar here-->
+    <% include ../../partials/project02/navbar.ejs %>
+
+    <br/>
+
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'add')" id="defaultOpen">Add a New Movie</button>
+        <button class="tablinks" onclick="openTab(event, 'edit')">Update/Edit a Movie</button>
+    </div>
+
+    <div id="add" class="tabcontent container">
+        <h2 id="heading" class="text-center">Add a Movie to the List</h2><br/>
+        <form id="movieForm" class="form-horizontal" action="addMovieCode.php" method="post">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="movieName">Movie Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="movieName" placeholder="" name="movieName" required>
+                </div>
+                <div class="col-sm-2"></div>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Add a Director" onclick="addDirector('directorDiv')">
+                <label class="control-label col-sm-2" for="director">Director(s):</label>
+                <div class="col-sm-6" id="directorDiv"> 
+                    <input list="directors0" name="director" id="director0">
+                    <datalist id="directors0">
+                    </datalist>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Add an Actor" onclick="addActor('actorDiv')">
+                <label class="control-label col-sm-2" for="actor">Starring Actor(s):</label>
+                <div class="col-sm-6" id="actorDiv">
+                    <input list="actors0" name="actor" id="actor0">
+                    <datalist id="actors0">
+                    </datalist>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="summary">Movie Summary:</label>
+                <div class="col-sm-6">
+                    <textarea class="form-control" id="summary" name="summary" rows="5" required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="rated">Rated:</label>
+                <div class="col-sm-2">
+                    <select class="form-control" name="rated" id="rated" required>
+                    </select>
+                </div>
+            </div>
+
+            <hr>
+            <h3 class="text-center">Select the genres</h3>
+            <div id="genres"></div>
+
+            <br/>
+
+            <div class="form-group">        
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="edit" class="tabcontent">
+        <h3>Paris</h3>
+        <p>Paris is the capital of France.</p> 
+    </div>
+
+    <script>
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+        /**/
+    </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Edit/Add <%- JSON.stringify(page) %></title>
+    <title>Edit/Add</title>
     <% include ../../partials/project02/header.ejs %>
-</head>
+
     <script>
         let page = <%- JSON.stringify(page) %>;
         let dataList;
@@ -36,6 +36,7 @@
                         '</div>' +
                         '<div class="col-sm-3">' +
                             '<button class="pull-left" style="font-size:20px; margin-bottom:50px;" onclick="edit(\'' + index + '\')"><i class="fa fa-edit"></i></button>' +
+                            '<button class="pull-left" style="font-size:20px; margin-bottom:50px;" onclick="deleteItem(\'' + index + '\')"><i class="fa fa-trash"></i></button>' +
                         '</div>' +
                     '</div>\n';
             div.innerHTML = contents;
@@ -89,7 +90,34 @@
                 });
             }
         }
+
+        function deleteItem(index) {
+            let text = document.getElementById(page + index).value;
+
+            // confirm that the user wants to delete the item
+            if (confirm("You are going to delete \"" + text + "\". Click OK if this is what you want")) {
+                let postPath = "/project02/delete/" + page;
+                $.post(postPath, {value: text}, function(stuff) {
+                    if (stuff.success == true) {
+                        // reload the page so that the item in the list is updated
+                        loadPage();
+
+                        document.getElementById("message").innerHTML = '<div class="alert alert-success text-center">' +
+                                '<strong>Successfully deleted "' + text + '" from the database.</strong>' +
+                            '</div>';
+
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to delete "' + text + '" from the database. This is likely because ' +
+                                    'other movies in the database depend on this data.</strong>' +
+                            '</div>';
+                    }
+                });
+            }
+        }
     </script>
+</head>
 <body onload="loadPage()">
     <!--navbar here-->
     <% include ../../partials/project02/navbar.ejs %>

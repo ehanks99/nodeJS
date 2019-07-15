@@ -55,6 +55,15 @@ function insertNewGenre(request, response) {
     insertDataIntoDB(sql, params, response);
 }
 
+function insertNewRating(request, response) {
+    let sql = "INSERT INTO rating (rating_id, rating_name) " +
+              "  VALUES (nextval('rating_s1'), $1)";
+    let params = [request.body.name];
+    
+    // send the sql query and params to be executed
+    insertDataIntoDB(sql, params, response);
+}
+
 function updateDirector(request, response) {
     let sql = "UPDATE director " +
               "SET director_name = $1 " +
@@ -85,6 +94,40 @@ function updateGenre(request, response) {
     insertDataIntoDB(sql, params, response);
 }
 
+function updateRating(request, response) {
+    let sql = "UPDATE rating " +
+              "SET rating_name = $1 " +
+              "WHERE rating_name = $2 ";
+    let params = [request.body.newValue, request.body.oldValue];
+    
+    // send the sql query and params to be executed
+    insertDataIntoDB(sql, params, response);
+}
+
+function deleteDirector(request, response) {
+    let sql = "DELETE FROM director WHERE director_name = $1";
+    let params = [request.body.value];
+    insertDataIntoDB(sql, params, response);
+}
+
+function deleteActor(request, response) {
+    let sql = "DELETE FROM starring_actor WHERE actor_name = $1";
+    let params = [request.body.value];
+    insertDataIntoDB(sql, params, response);
+}
+
+function deleteGenre(request, response) {
+    let sql = "DELETE FROM genre WHERE genre_type = $1";
+    let params = [request.body.value];
+    insertDataIntoDB(sql, params, response);
+}
+
+function deleteRating(request, response) {
+    let sql = "DELETE FROM rating WHERE rating_name = $1";
+    let params = [request.body.value];
+    insertDataIntoDB(sql, params, response);
+}
+
 function insertNewMovie(request, response) {
     console.log("inserting new movie");
     /*
@@ -96,8 +139,14 @@ module.exports = {
     insertNewDirector: insertNewDirector,
     insertNewActor: insertNewActor,
     insertNewGenre: insertNewGenre,
+    insertNewRating: insertNewRating,
     insertNewMovie: insertNewMovie,
     updateDirector: updateDirector,
     updateActor: updateActor,
-    updateGenre: updateGenre
+    updateGenre: updateGenre,
+    updateRating: updateRating,
+    deleteDirector: deleteDirector,
+    deleteActor: deleteActor,
+    deleteGenre: deleteGenre,
+    deleteRating: deleteRating
 }

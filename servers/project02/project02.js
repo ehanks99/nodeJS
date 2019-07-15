@@ -27,7 +27,13 @@ router.get("/project02/mainPage", function(request, response) {
 
 router.get("/project02/edit-add/:page", function(request, response) {
     let page = request.params.page;
-    response.render("pages/project02/editAdd.ejs", {page: page})
+    
+    if (page === "movie") {
+        response.render("pages/project02/editAddMovie.ejs");
+    }
+    else {
+        response.render("pages/project02/editAdd.ejs", {page: page});
+    }
 });
 
 
@@ -37,16 +43,25 @@ router.get("/project02/directors", getData.getDirectors);
 router.get("/project02/alldirectors", getData.getAllDirectors);
 router.post("/project02/director", destroySession, setData.insertNewDirector);
 router.post("/project02/update/director", destroySession, setData.updateDirector);
+router.post("/project02/delete/director", destroySession, setData.deleteDirector);
 
 router.get("/project02/actors", getData.getActors);
 router.get("/project02/allactors", getData.getAllActors);
 router.post("/project02/actor", destroySession, setData.insertNewActor);
 router.post("/project02/update/actor", destroySession, setData.updateActor);
+router.post("/project02/delete/actor", destroySession, setData.deleteActor);
 
 router.get("/project02/genres", getData.getGenres);
 router.get("/project02/allgenres", getData.getAllGenres);
 router.post("/project02/genre", destroySession, setData.insertNewGenre);
 router.post("/project02/update/genre", destroySession, setData.updateGenre);
+router.post("/project02/delete/genre", destroySession, setData.deleteGenre);
+
+router.get("/project02/ratings", getData.getRatings);
+router.get("/project02/allratings", getData.getAllRatings);
+router.post("/project02/rating", destroySession, setData.insertNewRating);
+router.post("/project02/update/rating", destroySession, setData.updateRating);
+router.post("/project02/delete/rating", destroySession, setData.deleteRating);
 
 router.get("/project02/movies", getData.getMovies);
 router.get("/project02/allmovies", getData.getAllMovies);

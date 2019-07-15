@@ -268,6 +268,30 @@ function getAllGenres(request, response) {
     runSqlQuery(sql, null, sendResultsBack, response);
 }
 
+function getRatings(request, response) {
+    let query = url.parse(request.url, true).query;
+
+    // we should be given a movie name in the query string
+    // we need to return the rating of the given movie
+    let movieName = query.movie;
+    var sql = "SELECT movie.movie_rating " +
+              "FROM movie " +
+              "WHERE movie.movie_name = $1";
+    var params = [movieName];
+
+    // run the query and return the results
+    runSqlQuery(sql, params, sendResultsBack, response);
+}
+
+function getAllRatings(request, response) {
+    // we need to return all the genres in the database
+    var sql = "SELECT rating.rating_name AS data " +
+              "FROM rating";
+    
+    // run the query and return the results
+    runSqlQuery(sql, null, sendResultsBack, response);
+}
+
 function getMovies(request, response) {
     let query = url.parse(request.url, true).query;
     let sql;
@@ -326,6 +350,8 @@ module.exports = {
     getAllActors: getAllActors,
     getGenres: getGenres,
     getAllGenres: getAllGenres,
+    getRatings: getRatings,
+    getAllRatings: getAllRatings,
     getMovies: getMovies,
     getAllMovies: getAllMovies
 }
