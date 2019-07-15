@@ -27,7 +27,7 @@ router.get("/team-activity09/math_service", function(request, response) {
 
 function calculate(req, res) {
     let query = url.parse(req.url, true).query;
-        
+
     let lhs = parseFloat(query.lhs);
     let operation = query.operation;
     let rhs = parseFloat(query.rhs);

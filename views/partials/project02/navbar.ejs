@@ -1,6 +1,17 @@
     <div class="myNavbar">
         <a class="active" href="/project02/mainPage">Home Page</a>
     
+        <div class="myDropdown">
+            <button class="myDropbtn">Edit/Add 
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="myDropdown-content">
+              <a href="/project02/edit-add/director">Directors</a>
+              <a href="/project02/edit-add/actor">Actors</a>
+              <a href="/project02/edit-add/genre">Genres</a>
+            </div>
+        </div>
+
         <div class="search-container">
             <form id="navbarSearch" action="/project02/mainPage" method="get">
                 <input type="text" placeholder="Search..." name="search">

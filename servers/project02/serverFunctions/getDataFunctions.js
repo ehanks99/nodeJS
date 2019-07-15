@@ -3,6 +3,7 @@ const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: connectionString});
 let res;
+let req;
 let count = 0;
 let numRows = 20;
 
@@ -13,8 +14,18 @@ let url = require("url");
 function collectAllMovieData(request, response) {
     console.log("Getting all movie information.");
 
+    // If we still have the data saved in our session variable, we'll just return that
+    if (request.session.dataList) {
+        console.log("\n\nThe movie list was saved in our session - grabbing that\n\n");
+        response.json({success:true, "movieArray": req.session.dataList}); 
+        return;
+    }
+
+    // Otherwise, we've got to look it up in the database
+
     // For some reason, the response turned null at just the point I needed it. I couldn't fix it, so I'm setting it as a global variable
     res = response;
+    req = request;
 
     // start count off at zero
     count = 0;
@@ -41,7 +52,6 @@ function collectAllMovieData(request, response) {
 }
 
 function grabItemsForEachMovie(error, resultRows) {
-    console.log("inside the \"grabItemsForEachMovie\" functions");
     var movieArray = { movies: resultRows };
     console.log("Movie info has been grabbed - now working on grabbing the directors, actors and genres for each movie.");
 
@@ -67,7 +77,6 @@ function grabItemsForEachMovie(error, resultRows) {
 }
 
 function selectAllMovieDataQuery(callback) {
-    console.log("inside the \"selectAllMovieDataQuery\" functions");
     var sql = "SELECT movie.movie_id, movie.movie_name, movie.movie_rating, movie.picture_filepath, movie.movie_summary FROM movie;";
 
     pool.query(sql, function(error, result) {
@@ -175,6 +184,7 @@ function addGenresToMovie(error, index, movieArray, genreArray) {
             try {
                 //response.render("/project02/mainPage", { movieArray: movieArray});
                 console.log("movie information found, returning to mainPage");
+                req.session.dataList = movieArray;
                 res.json({success:true, "movieArray": movieArray}); 
             }
             catch (error) {
@@ -224,6 +234,15 @@ function getDirectors(request, response) {
     runSqlQuery(sql, params, sendResultsBack, response);
 }
 
+function getAllDirectors(request, response) {
+    // we need to return all the directors in the database
+    var sql = "SELECT director.director_name AS data " +
+              "FROM director";
+    
+    // run the query and return the results
+    runSqlQuery(sql, null, sendResultsBack, response);
+}
+
 function getActors(request, response) {
     let query = url.parse(request.url, true).query;
 
@@ -241,6 +260,15 @@ function getActors(request, response) {
     runSqlQuery(sql, params, sendResultsBack, response);
 }
 
+function getAllActors(request, response) {
+    // we need to return all the actors in the database
+    var sql = "SELECT starring_actor.actor_name AS data " +
+              "FROM starring_actor";
+    
+    // run the query and return the results
+    runSqlQuery(sql, null, sendResultsBack, response);
+}
+
 function getGenres(request, response) {
     let query = url.parse(request.url, true).query;
 
@@ -256,6 +284,15 @@ function getGenres(request, response) {
 
     // run the query and return the results
     runSqlQuery(sql, params, sendResultsBack, response);
+}
+
+function getAllGenres(request, response) {
+    // we need to return all the genres in the database
+    var sql = "SELECT genre.genre_type AS data " +
+              "FROM genre";
+    
+    // run the query and return the results
+    runSqlQuery(sql, null, sendResultsBack, response);
 }
 
 function getMovies(request, response) {
@@ -299,10 +336,23 @@ function getMovies(request, response) {
     runSqlQuery(sql, params, sendResultsBack, response);
 }
 
+function getAllMovies(request, response) {
+    // we need to return all the genres in the database
+    var sql = "SELECT movie.movie_name " +
+              "FROM movie";
+    
+    // run the query and return the results
+    runSqlQuery(sql, null, sendResultsBack, response);
+}
+
 module.exports = {
     collectAllMovieData: collectAllMovieData,
     getDirectors: getDirectors,
+    getAllDirectors: getAllDirectors,
     getActors: getActors,
+    getAllActors: getAllActors,
     getGenres: getGenres,
-    getMovies: getMovies
+    getAllGenres: getAllGenres,
+    getMovies: getMovies,
+    getAllMovies: getAllMovies
 }

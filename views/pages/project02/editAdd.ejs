@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit/Add <%- JSON.stringify(page) %></title>
+    <% include ../../partials/project02/header.ejs %>
+</head>
+    <script>
+        let page = <%- JSON.stringify(page) %>;
+        let dataList;
+
+        function loadPage() {
+            // make sure that the div that we're adding to is empty before we begin
+            document.getElementById("items").innerHTML = "";
+            document.getElementById("addHeading").innerHTML = "Add " + page;
+            document.getElementById("editHeading").innerHTML = "Edit " + page;
+
+            $.get("/project02/all" + page + "s", function(stuff) {
+                if (stuff.success == false) {
+                    document.getElementById("loadingText").innerHTML = "There was an error retrieving data - " + stuff.results;
+                }
+                else {
+                    document.getElementById("loadingText").innerHTML = "";
+                    dataList = stuff.results;
+                    stuff.results.forEach(addItemToList);
+                }
+            });
+        }
+
+        function addItemToList(item, index) {
+            let div = document.getElementById("items");
+            let contents = div.innerHTML;
+            contents += '\n<div>' +
+                        '<div class="col-sm-3"></div>' +
+                        '<div class="col-sm-6">' +
+                            '<input type="text" class="form-control" id="' + page + index + '" value="' + item.data + '">' +
+                        '</div>' +
+                        '<div class="col-sm-3">' +
+                            '<button class="pull-left" style="font-size:20px; margin-bottom:50px;" onclick="edit(\'' + index + '\')"><i class="fa fa-edit"></i></button>' +
+                        '</div>' +
+                    '</div>\n';
+            div.innerHTML = contents;
+        }
+
+        function add() {
+            var text = document.getElementById("add").value;
+
+            if (text != "" && confirm("Adding \"" + text + "\" to the database"))
+            {
+                let postPath = "/project02/" + page;
+                $.post(postPath, {name: text}, function(stuff) {
+                    if (stuff.success == true) {
+                        // reload the page so that the item is added to the list
+                        loadPage();
+
+                        document.getElementById("message").innerHTML = '<div class="alert alert-success text-center">' +
+                                '<strong>Successfully added "' + text + '" to database.</strong>' +
+                            '</div>';
+
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to add "' + text + '" to database.</strong>' +
+                            '</div>';
+                    }
+                });
+            }
+        }
+
+        function edit(index) {
+            let text = document.getElementById([page + index]).value;
+            // confirm that the user wants to update the text
+            if (confirm("You are going to change \"" + dataList[index].data + "\" to \"" + text + "\"")) {
+                let postPath = "/project02/update/" + page;
+                $.post(postPath, {oldValue: dataList[index].data, newValue: text}, function(stuff) {
+                    if (stuff.success == true) {
+                        // reload the page so that the item in the list is updated
+                        loadPage();
+
+                        document.getElementById("message").innerHTML = '<div class="alert alert-success text-center">' +
+                                '<strong>Successfully updated ' + page + ' to "' + text + '"</strong>' +
+                            '</div>';
+
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to update ' + page + ' to "' + text + '"</strong>' +
+                            '</div>';
+                    }
+                });
+            }
+        }
+    </script>
+<body onload="loadPage()">
+    <!--navbar here-->
+    <% include ../../partials/project02/navbar.ejs %>
+
+    <br/>
+    <div id="message"></div>
+    <div class="container">
+        <h2 id="addHeading" class="text-center">Add</h2>
+        
+        <div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="add">
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary pull-left" onclick="add()">Add</button>
+            </div>
+        </div>
+        <br/><br/><hr>
+
+        <h2 id="editHeading" class="text-center">Edit</h2>
+        <h3 id="loadingText" class="text-center">Loading ...</h3>
+        <div id="items"></div>
+    </div>
+</body>
+</html>

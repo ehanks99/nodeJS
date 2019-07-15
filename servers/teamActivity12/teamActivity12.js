@@ -6,7 +6,6 @@ let parser = require("body-parser");
 
 router.use(parser.urlencoded({extended: false}));
 
-
 var session = require('express-session');
 //var FileStore = require('session-file-store')(session);
 // set up the session
