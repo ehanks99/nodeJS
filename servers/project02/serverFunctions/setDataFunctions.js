@@ -88,11 +88,7 @@ function updateGenre(request, response) {
 function insertNewMovie(request, response) {
     console.log("inserting new movie");
     /*
-    let sql;
-    let params;
-    
-    // send the sql query and params to be executed
-    insertDataIntoDB(sql, params, response);
+    TO BE DONE LATER
     */
 }
 

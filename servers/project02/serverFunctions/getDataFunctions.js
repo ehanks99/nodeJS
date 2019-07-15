@@ -1,5 +1,4 @@
 const { Pool } = require("pg");
-//const async = require('async');
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({connectionString: connectionString});
 let res;
@@ -30,25 +29,7 @@ function collectAllMovieData(request, response) {
     // start count off at zero
     count = 0;
 
-   /*
-    async.waterfall([
-        function dothis(callback) {
-            console.log("inside the first function");
-            selectAllMovieDataQuery(grabItemsForEachMovie);
-            callback(null);
-        },
-        function dothat(callback) {
-            
-            console.log("inside second function");
-            callback(null);
-        }
-        ], function (error) {
-            console.log("finished");
-        })*/
-        
-    selectAllMovieDataQuery(/*callback - movie names have now been grabbed*/ grabItemsForEachMovie);
-
-    //response.json({result: 2});
+    selectAllMovieDataQuery(grabItemsForEachMovie);
 }
 
 function grabItemsForEachMovie(error, resultRows) {
@@ -63,7 +44,6 @@ function grabItemsForEachMovie(error, resultRows) {
     else {
         // for each movie, add the respective actors, directors, and genres to that movie
         for (var i in resultRows) {
-            //console.log("Grabbing directors, actors, and genres for movie: ", movieArray.movies[i].movie_name);
             // directors
             queryDirectorsForGivenMovieName(i, movieArray, resultRows[i].movie_name);
 
@@ -124,7 +104,6 @@ function addDirectorsToMovie(error, index, movieArray, directorArray) {
     }
     else {
         movieArray.movies[index].directors = directorArray;
-        //console.log(movieArray.movies[index].directors);
     }
 }
 
@@ -146,7 +125,6 @@ function addActorsToMovie(error, index, movieArray, actorArray) {
     }
     else {
         movieArray.movies[index].actors = actorArray;
-        //console.log(movieArray.movies[index].actors);
     }
 }
 
@@ -162,7 +140,6 @@ function queryGenresForGivenMovieName(index, movieArray, movieName) {
 }
 
 function addGenresToMovie(error, index, movieArray, genreArray) {
-    //console.log("incrementing count - originally ", count);
     // increment our row count
     count++;
     
@@ -171,18 +148,15 @@ function addGenresToMovie(error, index, movieArray, genreArray) {
     }
     else {
         movieArray.movies[index].genres = genreArray;
-        //console.log(movieArray.movies[index].genres);
     }
 
 
     if (count == numRows) {
-        //console.log(movieArray.movies[0].directors);
         // From what I can tell, this is the point where all the data should now be collected, correctly, in the movieArray
 
         // to be sure that all the other functions have finished, have a small timeout thingy for 250 milliseconds
         setTimeout(function () {
             try {
-                //response.render("/project02/mainPage", { movieArray: movieArray});
                 console.log("movie information found, returning to mainPage");
                 req.session.dataList = movieArray;
                 res.json({success:true, "movieArray": movieArray}); 
@@ -212,7 +186,6 @@ function sendResultsBack(error, results, response) {
         response.status(500).json({success:false, error:error});
     }
     else {
-        //console.log(results);
         response.json({success:true, results:results});
     }
 }
