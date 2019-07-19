@@ -124,7 +124,7 @@
 
     <script>
         $("#navbarSubmit").click(function() {
-            let searchWord = strtolower(document.getElementById("search").value);
+            let searchWord = (document.getElementById("search").value).toLowerCase();
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back ' +
                 '<h2>Search results for: ' + searchWord + '</a>';
 
@@ -132,9 +132,9 @@
             let searchList = [];
             let indexList = [];
             movieArray.movies.forEach(function(movie, index) {
-                if ((strpos(strtolower(movie.movie_name), searchWord) !== false) ||
-                    (strpos(strtolower(movie.movie_summary), searchWord) !== false) ||
-                    (strpos(strtolower(movie.movie_rating), searchWord) !== false)) {
+                if ((strpos((movie.movie_name).toLowerCase(), searchWord) !== false) ||
+                    (strpos((movie.movie_summary).toLowerCase(), searchWord) !== false) ||
+                    (strpos((movie.movie_rating).toLowerCase(), searchWord) !== false)) {
                         searchList.push(movie);
                         indexList.push(index);
                         return; // breaks out of one iteration of loop and continues with the next iteration
@@ -142,7 +142,7 @@
                 else {
                     // search through directors
                     movie.directors.forEach(function(director, index) {
-                        if ((strpos(strtolower(director), searchWord) !== false)) {
+                        if ((strpos(director.toLowerCase(), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
@@ -151,7 +151,7 @@
 
                     // actors
                     movie.actors.forEach(function(actor, index) {
-                        if ((strpos(strtolower(actor), searchWord) !== false)) {
+                        if ((strpos(actor.toLowerCase(), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
@@ -160,7 +160,7 @@
 
                     // genres
                     movie.genres.forEach(function(genre, index) {
-                        if ((strpos(strtolower(genre), searchWord) !== false)) {
+                        if ((strpos(genre.toLowerCase(), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
