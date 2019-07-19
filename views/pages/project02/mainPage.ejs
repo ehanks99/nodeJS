@@ -127,7 +127,7 @@
                     (strpos(strtolower(movie.movie_rating), searchWord) !== false)) {
                         searchList.push(movie);
                         indexList.push(index);
-                        continue; // breaks out of one iteration of loop and continues with the next iteration
+                        return; // breaks out of one iteration of loop and continues with the next iteration
                     }
                 else {
                     // search through directors
@@ -135,7 +135,7 @@
                         if ((strpos(strtolower(director), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
-                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                            return; // breaks out of one iteration of loop and continues with the next iteration
                         }
                     });
 
@@ -144,7 +144,7 @@
                         if ((strpos(strtolower(actor), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
-                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                            return; // breaks out of one iteration of loop and continues with the next iteration
                         }
                     });
 
@@ -153,7 +153,7 @@
                         if ((strpos(strtolower(genre), searchWord) !== false)) {
                             searchList.push(movie);
                             indexList.push(index);
-                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                            return; // breaks out of one iteration of loop and continues with the next iteration
                         }
                     });
                 }
