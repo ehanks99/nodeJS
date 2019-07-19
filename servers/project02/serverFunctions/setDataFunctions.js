@@ -159,7 +159,7 @@ function insertNewMovie(request, response) {
         if (error) {
             response.json({success: false, error: error});
         }
-        else if (result.rows > 0) {
+        else if (result.rows.length > 0) {
             response.json({success: false, error: "There's already a movie by that name in the database."});
         }
         else {
@@ -213,7 +213,7 @@ function insertDirector(movieName, director) {
     let params = [director];
 
     runQuery(sql, params, function(error, result) {
-        if (!result || result.rows.length == 0) {
+        if (result && result.rows.length == 0) {
             sql = "INSERT INTO director (director_id, director_name) " +
                     "VALUES (nextval('director_s1'), $1)";
             params = [director];
@@ -241,7 +241,7 @@ function insertActor(movieName, actor) {
     let params = [actor];
 
     runQuery(sql, params, function(error, result) {
-        if (!result || result.rows.length == 0) {
+        if (result && result.rows.length == 0) {
             sql = "INSERT INTO starring_actor (actor_id, actor_name) " +
                     "VALUES (nextval('starring_actor_s1'), $1)";
             params = [actor];
