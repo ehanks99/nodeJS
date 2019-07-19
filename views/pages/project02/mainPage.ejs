@@ -12,7 +12,7 @@
                     document.getElementById("loadingText").innerHTML = "Something went wrong with the AJAX request...";
                     return;
                 }
-                alert("here");
+                
                 movieArray = returnedInfo.movieArray;
                 setDivToMovieList();
             });
@@ -30,7 +30,7 @@
         }
 
         function addToDivString(i) {
-            let string = "<div class='row'>\n" +
+            let divString = "<div class='row'>\n" +
                 "<div class='col-md-2'><p></p></div>\n" +
                     "<div class='col-md-8'>\n" +
                         "<div class = 'pull-left'>\n" +
