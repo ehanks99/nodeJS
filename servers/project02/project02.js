@@ -44,33 +44,6 @@ router.get("/project02/edit-add/:page", function(request, response) {
         response.render("pages/project02/editAdd.ejs", {page: page});
     }
 });
-/*
-router.get("/project02/rand", function(req, res) {
-    const { Pool } = require("pg");
-    const connectionString = process.env.DATABASE_URL || "postgres://postgres:devron23@localhost:5432/postgres";
-    const pool = new Pool({connectionString: connectionString});
-
-    let sql = "SELECT movie.movie_name, movie.movie_summary, movie.movie_rating, movie.picture_filepath, " +
-    "genre.genre_type, director.director_name, starring_actor.actor_name " +
-    "FROM movie " +
-    "INNER JOIN movie_to_genre ON movie_to_genre.movie_id = movie.movie_id " +
-    "LEFT JOIN genre ON movie_to_genre.genre_id = genre.genre_id " +
-    "INNER JOIN movie_to_starring_actor ON movie_to_starring_actor.movie_id = movie.movie_id " +
-    "LEFT JOIN starring_actor ON movie_to_starring_actor.actor_id = starring_actor.actor_id " +
-    "INNER JOIN movie_to_director ON movie_to_director.movie_id = movie.movie_id " +
-    "LEFT JOIN director ON movie_to_director.director_id = director.director_id;";
-
-    pool.query(sql,  function(error, result) {
-        if (error) {
-            console.log("An error with the DB occurred");
-            console.log("ERROR: " + error);
-            res.json({success:false, results:result});
-        }
-        
-        res.json({success:true, results:result});
-    })
-});
-*/
 
 router.get("/project02/loggedIn", signUp.getLoginStatus);
 router.get("/project02/logout", signUp.logout);

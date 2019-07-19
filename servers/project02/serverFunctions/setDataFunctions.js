@@ -128,44 +128,123 @@ function deleteRating(request, response) {
     insertDataIntoDB(sql, params, response);
 }
 
+function runQuery(sql, params, callback) {
+    pool.query(sql, params, function(error, result) {
+        if (error) {
+            console.log("An error with the DB occurred");
+            console.log(error);
+
+            callback(error, result);
+        }
+        
+        callback(null, result);
+    })
+}
+
 function insertNewMovie(request, response) {
-    console.log("inserting new movie?");
-    //const postBody = request.body;
-    console.log(postBody["director[]"]);
+    //console.log("here");
+    //response.json({success:true});
 
-    
-    /*
-    TO BE DONE LATER
-    */
-    //let str = "director[]";
-    //var qs = require('querystring');
-    //console.log(request.body);
-    //console.log(request.body.data);
-    //let directorList = request.body.director;
-    //let actorList = request.body.actor;
-    //let genre = request.body.genre;
+    console.log("inserting a movie");
+    let movieName = request.body.movieName;
+    let movieSummary = request.body.summary;
+    let movieRating = request.body.rated;
+    let directors = request.body["director[]"];
+    let actors = request.body["actor[]"];
+    let genres = request.body["genre[]"];
+    console.log(request.body);
+    console.log(directors);
 
-    //console.log(request.body.genre);
-    /*
-    var queryData = "";
-    request.on('director[]', function(data) {
-        queryData += data;
-        console.log("here");
-        console.log(queryData);
-        if(queryData.length > 1e6) {
-            queryData = "";
-            response.writeHead(413, {'Content-Type': 'text/plain'}).end();
-            request.connection.destroy();
+    // first, check if the movie is already in the DB
+    let sql = "SELECT movie_id FROM movie WHERE movie_name = $1";
+    let params = [movieName];
+
+    runQuery(sql, params, function(error, result) {
+        if (error) {
+            response.json({success: false, error: error});
+            //response.render("pages/project02/editAddMovie.ejs?success=" + error );
+        }
+        else if (result.rows > 0) {
+            response.json({success: false, error: "There's already a movie by that name in the database."});
+            //response.render("pages/project02/editAddMovie.ejs?success=There's already a movie by that name in the database.");
+        }
+        else {
+            sql = "INSERT INTO movie (movie_id, movie_name, movie_rating, picture_filepath, movie_summary) " +
+                  "VALUES (nextval('movie_s1'), $1, $2, '', $3)";
+            params = [movieName, movieRating, movieSummary];
+
+            runQuery(sql, params, function(err, res) {
+                // now, push all of our actors and directors into the database 
+                // and connect them to the movieName (if they're already there, it shouldn't insert them)
+                if (Array.isArray(directors)) {
+                    directors.forEach(function(director) {
+                        insertDirector(movieName, director);
+                    });
+                }
+                else { 
+                    insertDirector(movieName, directors);
+                }
+
+                // insert actors
+                if (Array.isArray(actors)) {
+                    actors.forEach(function(actor) {
+                        insertActor(movieName, actor);
+                    });
+                }
+                else { 
+                    insertActor(movieName, actors);
+                }
+                
+                // insert genres
+                if (Array.isArray(genres)) {
+                    genres.forEach(function(genre) {
+                        insertGenre(movieName, genre);
+                    });
+                }
+                else { 
+                    insertGenre(movieName, genres);
+                }
+            });
         }
     });
-    request.on('end', function() {
-        request.post = qs.parse(queryData);
+
+    response.json({success: true});
+    //response.render("pages/project02/editAddMovie.ejs?success=true");
+}
+
+function insertDirector(movieName, director) {
+    let sql = "INSERT INTO director (director_id, director_name) " +
+            "VALUES (nextval('director_s1'), $1)";
+    let params = [director];
+    runQuery(sql, params, function(er, re) {
+        sql = "INSERT INTO movie_to_director (movie_director_id, movie_id, director_id) " +
+            "VALUES (nextval('movie_to_director_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
+            "(SELECT director_id FROM director WHERE director_name = $2))";
+        params = [movieName, director];
+        runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_director row"); });
     });
-    console.log(queryData);
-    */
-    //request.body.rated;
-    //request.body.summary;
-    //request.body.movieName;
+}
+
+function insertActor(movieName, actor) {
+    let sql = "INSERT INTO starring_actor (actor_id, actor_name) " +
+            "VALUES (nextval('starring_actor_s1'), $1)";
+    let params = [actor];
+    runQuery(sql, params, function(er, re) {
+        sql = "INSERT INTO movie_to_starring_actor (movie_actor_id, movie_id, actor_id) " +
+                "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
+                "(SELECT actor_id FROM starring_actor WHERE actor_name = $2))";
+        params = [movieName, actor];
+        runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_starring_actor row"); });
+    });
+}
+
+function insertGenre(movieName, genre) {
+    // genres are already in the genre table, just set the many to many relationship up
+    let sql = "INSERT INTO movie_to_genre (movie_genre_id, movie_id, genre_id) " +
+            "VALUES (nextval('movie_to_genre_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
+            "(SELECT genre_id FROM genre WHERE genre_type = $2))";
+    let params = [movieName, genre];
+    runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_genre row"); });
 }
 
 module.exports = {

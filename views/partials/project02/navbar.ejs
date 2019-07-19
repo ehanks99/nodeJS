@@ -5,9 +5,12 @@
         $.get("/project02/loggedIn", function(returnedInfo) {
                 if (returnedInfo.isLoggedIn == true) {
                     isLoggedIn = true;
+                    document.getElementById("signIn").href = "/project02/logout";
+                    document.getElementById("signIn").innerHTML = "Log Out";
                 }
                 if (returnedInfo.isAdmin == true) {
                     isAdmin = true;
+                    document.getElementById("dropdown").style = "display:block";
                 }
         });
     </script>
@@ -15,7 +18,7 @@
     <div class="myNavbar">
         <a class="active" href="/project02/mainPage">Home Page</a>
     
-        <div class="myDropdown">
+        <div class="myDropdown" id="dropdown" style="display:none">
             <button class="myDropbtn">Edit/Add 
                 <i class="fa fa-caret-down"></i>
             </button>
@@ -27,7 +30,7 @@
               <a href="/project02/edit-add/rating">Ratings</a>
             </div>
         </div>
-        <a class="active" href="/project02/login">Sign In</a>
+        <a class="active" href="/project02/login" id="signIn">Sign In</a>
 
         <div class="search-container">
             <form id="navbarSearch" action="/project02/mainPage" method="get">

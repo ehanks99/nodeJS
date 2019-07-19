@@ -39,19 +39,12 @@
             $.post("/project02/validate/login", {username: $("#username").val(), password: $("#pswrd").val()}, function(returnedInfo) {
                 if (returnedInfo.success == false) {
                     document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
-                                '<strong>Something went wrong with the AJAX request.</strong>' +
-                            '</div>';
+                            '<strong>Failed to log in with that username and password. Maybe you misspelled something?</strong>' +
+                        '</div>';
                     return;
                 }
                 else {
-                    if (returnedInfo.loggedIn == true) {
-                        location.replace("/project02/mainPage");
-                    }
-                    else {
-                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
-                                '<strong>Failed to log in with that username and password. Maybe you misspelled something?</strong>' +
-                            '</div>';
-                    }
+                    location.replace("/project02/mainPage");
                 }
             });
 

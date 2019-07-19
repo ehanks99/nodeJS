@@ -93,7 +93,7 @@ function addElement(parentId, elementTag, elementId, html)
 
 function addDirector(parentId)
 {
-    actorId++;
+    directorId++;
     let html = '<input list="directors' + directorId + '" name="director[]" id="director' + directorId + '">' +
                '<datalist id="directors' + directorId + '">' + document.getElementById("directors0").innerHTML + // actors0 is the base dataList to use
                '</datalist>';

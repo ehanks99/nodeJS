@@ -12,19 +12,14 @@ router.use(parser.urlencoded({extended: false}));
 
 function runQuery(sql, params, callback) {
     pool.query(sql, params, function(error, result) {
-        // message indicating success or failure
-        //let message = {success:true, data: result};
-
         if (error) {
             console.log("An error with the DB occurred");
             console.log(error);
 
             callback(error, result);
-            //message = {success:false, error:error.detail};
         }
         
         callback(null, result);
-        //response.json(message);
     })
 }
 
@@ -45,33 +40,36 @@ function validateLogin(request, response) {
             message = {success: false, error: error};
             response.json(message);
         }
+        else if (!result || result.rows == 0) {
+            message = {success: false, error: "Username not found"};
+            response.json(message);
+        }
         else {
-            bcrypt.hash(plainTextPassword, saltRounds, function(err, hash) {
-                if (err) {
-                    message = {success: false, error: error};
-                    response.json(message);
+            // we got the DB results back -> see if the passwords match
+            bcrypt.compare(plainTextPassword, result.rows[0].pswrd, function(innerErr, res) {
+                if (innerErr) {
+                    console.log("error");
+                    message = {success: false, error: innerErr};
+                }
+                else if (res == false) {
+                    console.log("no match");
+                    message = {success: false, error: "Wrong password"};
+                }
+                else if (res == true) {
+                    console.log("match");
+                    message = {success: true};
+
+                    // we've been given a valid username-password pair -> log the user in
+                    request.session.isLoggedIn = true;
+
+                    // if the username given is the admin one, set that session vairable
+                    if (username == "admin")
+                        request.session.isAdmin = true;
+                    else
+                        request.session.isAdmin = false;
                 }
 
-                // we got the DB results back -> see if the passwords match
-                bcrypt.compare(plainTextPassword, hash, function(innerErr, res) {
-                    if (innerErr) {
-                        message = {success: false, error: innerErr};
-                    }
-                    else if (res == false) {
-                        message = {success: false, error: "Wrong password"};
-                    }
-                    else if (res == true) {
-                        // we've been given a valid username-password pair -> log the user in
-                        request.session.isLoggedIn = true;
-
-                        // if the username given is the admin one, set that session vairable
-                        if (username == "admin")
-                            request.session.isAdmin = true;
-                        else
-                            request.session.isAdmin = false;
-                    }
-                    response.json(message);
-                });
+                response.json(message);
             });
         }
     });
@@ -116,18 +114,18 @@ function getLoginStatus(request, response) {
     let admin = false;
     if (request.session.isLoggedIn && request.session.isLoggedIn == true)
         loggedIn = true;
-    if (request.session.isAdmin && request.session.isAdmin == true);
+    if (request.session.isAdmin && request.session.isAdmin == true)
         admin = true;
 
     response.json({isLoggedIn: loggedIn, isAdmin: admin});
 }
 
-function logoutOfSession(request, response) {
+function logout(request, response) {
     // clear the login session variables
     request.session.isLoggedIn = false;
     request.session.isAdmin = false;
 
-    response.json({success: true});
+    response.render("pages/project02/login");
 }
 
 function isUniqueUsername(request, response) {
