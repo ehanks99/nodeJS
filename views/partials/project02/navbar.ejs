@@ -3,15 +3,15 @@
         let isAdmin = false;
 
         $.get("/project02/loggedIn", function(returnedInfo) {
-                if (returnedInfo.isLoggedIn == true) {
-                    isLoggedIn = true;
-                    document.getElementById("signIn").href = "/project02/logout";
-                    document.getElementById("signIn").innerHTML = "Log Out";
-                }
-                if (returnedInfo.isAdmin == true) {
-                    isAdmin = true;
-                    document.getElementById("dropdown").style = "display:block";
-                }
+            if (returnedInfo.isLoggedIn == true) {
+                isLoggedIn = true;
+                document.getElementById("signIn").href = "/project02/logout";
+                document.getElementById("signIn").innerHTML = "Log Out";
+            }
+            if (returnedInfo.isAdmin == true) {
+                isAdmin = true;
+                document.getElementById("dropdown").style = "display:block";
+            }
         });
     </script>
     
