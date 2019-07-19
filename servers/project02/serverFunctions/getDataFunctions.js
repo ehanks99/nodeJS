@@ -39,7 +39,7 @@ function grabItemsForEachMovie(error, resultRows) {
 
     if (error) {
         console.log("ERROR: " + error);
-        response.status(500).json({success:false, data:error});
+        res.status(500).json({success:false, data:error});
     }
     else {
         // for each movie, add the respective actors, directors, and genres to that movie

@@ -112,6 +112,63 @@
             document.getElementById("movies").innerHTML = divString;
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
         }
+
+        document.getElementById("navbarSubmit").click(function() {
+            let searchWord = strtolower(document.getElementById("search").value);
+            document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back ' +
+                '<h2>Search results for: ' + searchWord + '</a>';
+
+            // search for the term in the movie list
+            let searchList = [];
+            let indexList = [];
+            movieArray.movies.forEach(function(movie, index) {
+                if ((strpos(strtolower(movie.movie_name), searchWord) !== false) ||
+                    (strpos(strtolower(movie.movie_summary), searchWord) !== false) ||
+                    (strpos(strtolower(movie.movie_rating), searchWord) !== false)) {
+                        searchList.push(movie);
+                        indexList.push(index);
+                        continue; // breaks out of one iteration of loop and continues with the next iteration
+                    }
+                else {
+                    // search through directors
+                    movie.directors.forEach(function(director, index) {
+                        if ((strpos(strtolower(director), searchWord) !== false)) {
+                            searchList.push(movie);
+                            indexList.push(index);
+                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                        }
+                    });
+
+                    // actors
+                    movie.actors.forEach(function(actor, index) {
+                        if ((strpos(strtolower(actor), searchWord) !== false)) {
+                            searchList.push(movie);
+                            indexList.push(index);
+                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                        }
+                    });
+
+                    // genres
+                    movie.genres.forEach(function(genre, index) {
+                        if ((strpos(strtolower(genre), searchWord) !== false)) {
+                            searchList.push(movie);
+                            indexList.push(index);
+                            continue; // breaks out of one iteration of loop and continues with the next iteration
+                        }
+                    });
+                }
+            });
+
+            // we should now have all the movies with something matching the search word -> display them
+            let divString = "";
+
+            searchList.forEach(function(item, index) {
+                divString += addToDivString(indexList[index]);
+            });
+
+            document.getElementById("movies").innerHTML = divString;
+            return false; // avoid the actual submit of the form.
+        });
     </script>
 </head>
 <body onload="query()">
