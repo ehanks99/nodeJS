@@ -129,10 +129,43 @@ function deleteRating(request, response) {
 }
 
 function insertNewMovie(request, response) {
-    console.log("inserting new movie");
+    console.log("inserting new movie?");
+    //const postBody = request.body;
+    console.log(postBody["director[]"]);
+
+    
     /*
     TO BE DONE LATER
     */
+    //let str = "director[]";
+    //var qs = require('querystring');
+    //console.log(request.body);
+    //console.log(request.body.data);
+    //let directorList = request.body.director;
+    //let actorList = request.body.actor;
+    //let genre = request.body.genre;
+
+    //console.log(request.body.genre);
+    /*
+    var queryData = "";
+    request.on('director[]', function(data) {
+        queryData += data;
+        console.log("here");
+        console.log(queryData);
+        if(queryData.length > 1e6) {
+            queryData = "";
+            response.writeHead(413, {'Content-Type': 'text/plain'}).end();
+            request.connection.destroy();
+        }
+    });
+    request.on('end', function() {
+        request.post = qs.parse(queryData);
+    });
+    console.log(queryData);
+    */
+    //request.body.rated;
+    //request.body.summary;
+    //request.body.movieName;
 }
 
 module.exports = {

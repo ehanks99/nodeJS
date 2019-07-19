@@ -1,4 +1,3 @@
-
 let allMovies;
 let allDirectors;
 let allActors;
@@ -58,8 +57,8 @@ function loadInfo() {
             returnedInfo.results.forEach(function addDataListToInput(item, index) {
                 let option = '<div class="col-sm-2"></div>' +
                              '<div class="form-check form-check-inline">' +
-                             '  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="' + item.data + '">' +
-                             '  <label class="form-check-label" for="inlineCheckbox1" name="genre[]">' + item.data + '</label>' +
+                             '  <input class="form-check-input" type="checkbox" name="genre[]" id="inlineCheckbox1" value="' + item.data + '">' +
+                             '  <label class="form-check-label" for="inlineCheckbox1">' + item.data + '</label>' +
                              '</div>';
                 document.getElementById("genres").innerHTML += option;
             });
@@ -95,7 +94,7 @@ function addElement(parentId, elementTag, elementId, html)
 function addDirector(parentId)
 {
     actorId++;
-    let html = '<input list="directors' + directorId + '" name="director" id="director' + directorId + '">' +
+    let html = '<input list="directors' + directorId + '" name="director[]" id="director' + directorId + '">' +
                '<datalist id="directors' + directorId + '">' + document.getElementById("directors0").innerHTML + // actors0 is the base dataList to use
                '</datalist>';
     html += '<a href="" onclick="removeElement(\'director' + directorId + '\'); return false;">Remove</a>';
@@ -106,7 +105,7 @@ function addDirector(parentId)
 function addActor(parentId)
 {
     actorId++;
-    let html = '<input list="actors' + actorId + '" name="actor" id="actor' + actorId + '">' +
+    let html = '<input list="actors' + actorId + '" name="actor[]" id="actor' + actorId + '">' +
                '<datalist id="actors' + actorId + '">' + document.getElementById("actors0").innerHTML + // actors0 is the base dataList to use
                '</datalist>';
     html += '<a href="" onclick="removeElement(\'actor' + actorId + '\'); return false;">Remove</a>';

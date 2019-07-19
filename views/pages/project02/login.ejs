@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit/Add</title>
+    <% include ../../partials/project02/header.ejs %>
+</head>
+<body>
+    <!--navbar here-->
+    <% include ../../partials/project02/navbar.ejs %>
+
+    <div id="message"></div>
+    <div class="container">
+        <h2 class="text-center">Login</h2><br/>
+        <form class="form-horizontal" id="loginForm"><!--action="/project02/validate/login" method="post">-->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="username">Username:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="pswrd">Password:</label>
+                <div class="col-sm-10">          
+                    <input type="password" class="form-control" id="pswrd" placeholder="Enter password" name="pswrd" required>
+                </div>
+            </div>
+            <div class="form-group">        
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" id="submitButton" class="btn btn-default">Submit</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="/project02/signUp">Not a member? Sign up!</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        $("#loginForm").submit(function(event) {
+            event.preventDefault();
+            $.post("/project02/validate/login", {username: $("#username").val(), password: $("#pswrd").val()}, function(returnedInfo) {
+                if (returnedInfo.success == false) {
+                    document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Something went wrong with the AJAX request.</strong>' +
+                            '</div>';
+                    return;
+                }
+                else {
+                    if (returnedInfo.loggedIn == true) {
+                        location.replace("/project02/mainPage");
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to log in with that username and password. Maybe you misspelled something?</strong>' +
+                            '</div>';
+                    }
+                }
+            });
+
+            // the request has been sent off -> clear the password field
+            $("#pswrd").val() = "";
+        });
+    </script>
+</body>
+</html>

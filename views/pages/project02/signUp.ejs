@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit/Add</title>
+    <% include ../../partials/project02/header.ejs %>
+    
+	<script type="text/javascript" src="/functions/project02/signUpFunctions.js"></script>
+</head>
+<body>
+    <!--navbar here-->
+    <% include ../../partials/project02/navbar.ejs %>
+
+    <div class="container">
+        <h2 class="text-center">Sign Up Form</h2><br/>
+        <form class="form-horizontal" id="loginForm"><!--action="/project02/validate/signUp" method="post">-->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="firstName">First Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="firstName" placeholder="John" name="firstName" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="lastName">Last Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="lastName" placeholder="Smith" name="lastName" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="username">Username:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="username" onfocusout="checkUsername()" placeholder="Enter username" name="username" required>
+                    <p><span style="color:red" id="usernameError"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="pswrd">Password:</label>
+                <div class="col-sm-10">          
+                    <input type="password" class="form-control" id="pswrd" onfocusout="checkCharacters()" placeholder="Enter password" name="pswrd" required>
+                    <p><span style="color:red" id="pswrdError1.0"></span>
+                    <p><span style="color:red" id="pswrdError1.1"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="verifyPswrd">Verify Password:</label>
+                <div class="col-sm-10">          
+                    <input type="password" class="form-control" id="verifyPswrd" onkeyup="checkPasswordsMatch()" placeholder="Enter password" name="verifyPswrd" required>
+                    <p><span style="color:red" id="pswrdError2"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="email">Email:</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="email" placeholder="example@gmail.com" name="email" required>
+                </div>
+            </div>
+            <div class="form-group">        
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $("#loginForm").submit(function(event) {
+            event.preventDefault();
+
+            // send it
+            $.post("/project02/validate/signUp", {
+                username: $("#username").val(), 
+                password: $("#pswrd").val(),
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val(),
+                email: $("#email").val() }, function(returnedInfo) {
+                if (returnedInfo.success == false) {
+                    document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Something went wrong with the AJAX request.</strong>' +
+                            '</div>';
+                    return;
+                }
+                else {
+                    if (returnedInfo.success == true) {
+                        location.replace("/project02/mainPage");
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to sign you up for some reason... Sorry!</strong>' +
+                            '</div>';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -21,7 +21,7 @@
 
     <div id="add" class="tabcontent container">
         <h2 id="heading" class="text-center">Add a Movie to the List</h2><br/>
-        <form id="movieForm" class="form-horizontal" action="addMovieCode.php" method="post">
+        <form id="movieForm" class="form-horizontal" id="form" action="/project02/movie" method="post">
             <div class="form-group">
                 <label class="control-label col-sm-2" for="movieName">Movie Name:</label>
                 <div class="col-sm-8">
@@ -33,7 +33,7 @@
                 <input type="button" value="Add a Director" onclick="addDirector('directorDiv')">
                 <label class="control-label col-sm-2" for="director">Director(s):</label>
                 <div class="col-sm-6" id="directorDiv"> 
-                    <input list="directors0" name="director" id="director0">
+                    <input list="directors0" name="director[]" id="director0">
                     <datalist id="directors0">
                     </datalist>
                 </div>
@@ -42,7 +42,7 @@
                 <input type="button" value="Add an Actor" onclick="addActor('actorDiv')">
                 <label class="control-label col-sm-2" for="actor">Starring Actor(s):</label>
                 <div class="col-sm-6" id="actorDiv">
-                    <input list="actors0" name="actor" id="actor0">
+                    <input list="actors0" name="actor[]" id="actor0">
                     <datalist id="actors0">
                     </datalist>
                 </div>
@@ -69,10 +69,48 @@
 
             <div class="form-group">        
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" id="submitButton" class="btn btn-default">Submit</button>
                 </div>
             </div>
         </form>
+        <script>/*
+            // this is the id of the submit button
+            $("#submitButton").click(function() {
+                var url = "/project02/movie"; // the script where you handle the form input.
+                //alert(($('[name="director[]"]')));
+                var stuff = document.getElementsByName("director[]");//$('[name="director[]"]');
+                //alert(stuff);
+                //alert(stuff.length);
+
+
+                var directors = $.map(($('[name="director[]"]')), function(n)  { return n.value; } );
+                var extra =  directors ;
+                //extra = JSON.stringify(extra);
+                /*var string = "[";
+                for (var i = 0; i < directors.length; i++) {
+                   string += directors[i];
+                   if (i != directors.length - 1)
+                      string += ", ";
+                }
+                string += "]";
+                alert(string);
+
+                var data = {movieName: $("#movieName").val(), directodddrs: extra};//[1, 2, 3]};
+                $.ajax({
+                       type: "POST",
+                       url: url,
+                       //movieName: JSON.stringify($("#movieName")),
+                       //directors: JSON.stringify(document.getElementsByName("director[]")),
+                       data: data, //JSON.stringify($("#form").serialize()), // serializes the form's elements.
+                       success: function(data)
+                       {
+                           alert(data); // show response from the php script.
+                       }
+                     });
+            
+                return false; // avoid to execute the actual submit of the form.
+            });*/
+            </script>
     </div>
 
     <div id="edit" class="tabcontent">

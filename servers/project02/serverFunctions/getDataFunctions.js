@@ -14,7 +14,7 @@ function collectAllMovieData(request, response) {
     console.log("Getting all movie information.");
 
     // If we still have the data saved in our session variable, we'll just return that
-    if (request.session.dataList) {
+    if (request.session.dataList && request.session.dataList != "") {
         console.log("\n\nThe movie list was saved in our session - grabbing that\n\n");
         response.json({success:true, "movieArray": req.session.dataList}); 
         return;
@@ -178,7 +178,7 @@ function runSqlQuery(sql, params, callback, response) {
         }
         
         callback(null, result.rows, response);
-    })
+    });
 }
 
 function sendResultsBack(error, results, response) {
