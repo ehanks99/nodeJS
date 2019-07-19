@@ -219,19 +219,23 @@ function insertDirector(movieName, director) {
             params = [director];
             runQuery(sql, params, function(er, re) {
                 if (er) console.log("ERROR inserting new dirctor"); 
-                else console.log("inserted new dirctor");
+                else {
+                    console.log("inserted new dirctor");
+
+                    sql = "INSERT INTO movie_to_director (movie_director_id, movie_id, director_id) " +
+                        "VALUES (nextval('movie_to_director_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
+                        "(SELECT director_id FROM director WHERE director_name = $2))";
+                    params = [movieName, director];
+
+                    runQuery(sql, params, function(e, r) {
+                        if (e) console.log("ERROR inserting a movie_to_director row"); 
+                        else console.log("inserted a movie_to_director row"); 
+                    });
+                }
             });
         }
     
-        sql = "INSERT INTO movie_to_director (movie_director_id, movie_id, director_id) " +
-            "VALUES (nextval('movie_to_director_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
-            "(SELECT director_id FROM director WHERE director_name = $2))";
-        params = [movieName, director];
-
-        runQuery(sql, params, function(e, r) {
-            if (e) console.log("ERROR inserting a movie_to_director row"); 
-            else console.log("inserted a movie_to_director row"); 
-        });
+        
     });
 }
 
@@ -247,24 +251,22 @@ function insertActor(movieName, actor) {
             params = [actor];
 
             runQuery(sql, params, function(er, re) {
-                if (er) console.log("ERROR inserting new actor: " + er); 
-                else console.log("inserted new actor");
+                if (er) console.log("ERROR inserting new actor"); 
+                else {
+                    console.log("inserted new actor");
+
+                    sql = "INSERT INTO movie_to_starring_actor (movie_actor_id, movie_id, actor_id) " +
+                            "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
+                            "(SELECT actor_id FROM starring_actor WHERE actor_name = $2));";
+                    params = [movieName, actor];
+
+                    runQuery(sql, params, function(e, r) { 
+                        if (e) console.log("ERROR inserting a movie_to_starring_actor row"); 
+                        else console.log("inserted a movie_to_starring_actor row"); 
+                    });
+                }
             });
         }
-
-        console.log("actor: " + actor);
-        sql = "INSERT INTO movie_to_starring_actor (movie_actor_id, movie_id, actor_id) " +
-                "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = '" + movieName + "' " +//$1), " +
-                "(SELECT actor_id FROM starring_actor WHERE actor_name = '" + actor + "'));";//$2))";
-        //params = [movieName, actor];
-        params = [];
-        console.log("movieName: " + movieName);
-        console.log("actor: " + actor);
-
-        runQuery(sql, params, function(e, r) { 
-            if (e) console.log("ERROR inserting a movie_to_starring_actor row"); 
-            else console.log("inserted a movie_to_starring_actor row"); 
-        });
     });
 }
 
