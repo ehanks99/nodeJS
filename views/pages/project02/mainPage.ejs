@@ -12,7 +12,7 @@
                     document.getElementById("loadingText").innerHTML = "Something went wrong with the AJAX request...";
                     return;
                 }
-alert("here");
+                alert("here");
                 movieArray = returnedInfo.movieArray;
                 setDivToMovieList();
             });
@@ -21,7 +21,7 @@ alert("here");
         function setDivToMovieList() {
             var divString = "";
             for(var i = 0; i < movieArray.movies.length; i++) {
-                divString += setMovies(i);
+                divString += addToDivString(i);
             }
 
             document.getElementById("loadingText").innerHTML = "";
@@ -75,39 +75,7 @@ alert("here");
         }
 
         function showDetails(index) {
-            let divString = '<div class="col-md-2"><p></p></div>\n' +
-                '    <div class="col-md-8">\n' +
-                '    <h3 class = "text-center">' + movieArray.movies[index].movie_name + '</h3><hr>\n' +
-                '        <div class = "pull-left">\n' +
-                '            <img src = "movie_pictures/' + movieArray.movies[index].picture_filepath + '" class = "main-picture">\n' +
-                '        </div>\n' +
-                '        <div>\n' +
-                '            <p>' + movieArray.movies[index].movie_summary + '</p><br/>\n' +
-                '            <h5><b>Director(s): </b>\n';
-                            for(var j = 0; j < movieArray.movies[index].directors.length; j++) {
-                                divString += movieArray.movies[index].directors[j].director_name;
-                                if (j != movieArray.movies[index].directors.length - 1)
-                                    divString += ", ";
-                            }
-                            divString += '</h5>\n' +
-                '            <h5><b>Starring Actors: </b>\n';
-
-                            for(var j = 0; j < movieArray.movies[index].actors.length; j++) {
-                                divString += movieArray.movies[index].actors[j].actor_name;
-                                if (j != movieArray.movies[index].actors.length - 1)
-                                    divString += ", ";
-                            }
-                            divString += '</h5>\n' +
-                '            <h5><b>Genres: </b>\n';
-                            for(var j = 0; j < movieArray.movies[index].genres.length; j++) {
-                                divString += movieArray.movies[index].genres[j].genre_type;
-                                if (j != movieArray.movies[index].genres.length - 1)
-                                    divString += ", ";
-                            }
-                            divString += '</h5><br/>\n'    
-                '        </div>\n'+
-                '    </div>\n' +
-                '</div>\n';
+            let divString = addToDivString(index);
 
             document.getElementById("movies").innerHTML = divString;
             document.getElementById("div").innerHTML = '<a href="" onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
