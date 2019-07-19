@@ -14,19 +14,22 @@
                 }
 
                 movieArray = returnedInfo.movieArray;
-
-                var divString = "";
-                for(var i = 0; i < movieArray.movies.length; i++) {
-                    divString += setMovies(i, divString);
-                }
-
-                document.getElementById("loadingText").innerHTML = "";
-                document.getElementById("movies").innerHTML = divString;
-                document.getElementById("div").innerHTML = '<h2>Movie Selections</h2>';
+                setDivToMovieList();
             });
         }
 
-        function setMovies(i, divString) {
+        function setDivToMovieList() {
+            var divString = "";
+            for(var i = 0; i < movieArray.movies.length; i++) {
+                divString += setMovies(i, divString);
+            }
+
+            document.getElementById("loadingText").innerHTML = "";
+            document.getElementById("movies").innerHTML = divString;
+            document.getElementById("div").innerHTML = '<h2>Movie Selections</h2>';
+        }
+
+        function addToDivString(i, divString) {
             divString += "<div class='row'>\n" +
                 "<div class='col-md-2'><p></p></div>\n" +
                     "<div class='col-md-8'>\n" +
@@ -107,7 +110,7 @@
                 '</div>\n';
 
             document.getElementById("movies").innerHTML = divString;
-            document.getElementById("div").innerHTML = '<a href="" onclick="query()" class="previous">&laquo; Go Back</a>';
+            document.getElementById("div").innerHTML = '<a href="" onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
         }
     </script>
 </head>
