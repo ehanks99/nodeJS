@@ -112,7 +112,17 @@
             document.getElementById("movies").innerHTML = divString;
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
         }
+    </script>
+</head>
+<body onload="query()">
+    <% include ../../partials/project02/navbar.ejs %>
+    <!--navbar goes here-->
+    <br/><div id="div" class="text-center"><h2>Movie Selections</h2></div><br/><hr>
 
+    <h3 id="loadingText" class="text-center">Loading the movies ...</h3>
+    <div id="movies"></div>
+
+    <script>
         document.getElementById("navbarSubmit").click(function() {
             let searchWord = strtolower(document.getElementById("search").value);
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back ' +
@@ -170,13 +180,5 @@
             return false; // avoid the actual submit of the form.
         });
     </script>
-</head>
-<body onload="query()">
-    <% include ../../partials/project02/navbar.ejs %>
-    <!--navbar goes here-->
-    <br/><div id="div" class="text-center"><h2>Movie Selections</h2></div><br/><hr>
-
-    <h3 id="loadingText" class="text-center">Loading the movies ...</h3>
-    <div id="movies"></div>
 </body>
 </html>
