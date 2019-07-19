@@ -142,7 +142,7 @@
                 else {
                     // search through directors
                     movie.directors.forEach(function(director, index) {
-                        if (((director.toLowerCase()).indexOf(searchWord)  >= 0)) {
+                        if (((director).toLowerCase()).indexOf(searchWord)  >= 0) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
@@ -151,7 +151,7 @@
 
                     // actors
                     movie.actors.forEach(function(actor, index) {
-                        if (((actor.toLowerCase()).indexOf(searchWord)  >= 0)) {
+                        if (((actor).toLowerCase()).indexOf(searchWord)  >= 0) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
@@ -160,7 +160,7 @@
 
                     // genres
                     movie.genres.forEach(function(genre, index) {
-                        if (((genre.toLowerCase()).indexOf(searchWord)  >= 0)) {
+                        if (((genre).toLowerCase()).indexOf(searchWord)  >= 0) {
                             searchList.push(movie);
                             indexList.push(index);
                             return; // breaks out of one iteration of loop and continues with the next iteration
