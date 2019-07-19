@@ -5,7 +5,8 @@
     <% include ../../partials/project02/header.ejs %>
 
     <script>
-        var movieArray;
+        let movieArray;
+        
         function query() {
             $.get("/project02/getAllMovieData", function(returnedInfo) {
                 if (returnedInfo.success == false) {
@@ -19,8 +20,8 @@
         }
 
         function setDivToMovieList() {
-            var divString = "";
-            for(var i = 0; i < movieArray.movies.length; i++) {
+            let divString = "";
+            for(let i = 0; i < movieArray.movies.length; i++) {
                 divString += addToDivString(i);
             }
 
@@ -40,7 +41,7 @@
                             "<h4>" + movieArray.movies[i].movie_name + "</h4><hr>\n" +
                             "<h5><b>Director(s): </b>";
 
-                            for(var j = 0; j < movieArray.movies[i].directors.length; j++) {
+                            for(let j = 0; j < movieArray.movies[i].directors.length; j++) {
                                 divString += movieArray.movies[i].directors[j].director_name;
                                 if (j != movieArray.movies[i].directors.length - 1)
                                     divString += ", ";
@@ -49,7 +50,7 @@
                             divString += "</h5>\n" +
                                 "<h5><b>Starring Actors: </b>";
                     
-                            for(var j = 0; j < movieArray.movies[i].actors.length; j++) {
+                            for(let j = 0; j < movieArray.movies[i].actors.length; j++) {
                                 divString += movieArray.movies[i].actors[j].actor_name;
                                 if (j != movieArray.movies[i].actors.length - 1)
                                     divString += ", ";
@@ -58,15 +59,20 @@
                             divString += "</h5>\n" +
                                 "<h5><b>Genres: </b>";
 
-                            for(var j = 0; j < movieArray.movies[i].genres.length; j++) {
+                            for(let j = 0; j < movieArray.movies[i].genres.length; j++) {
                                 divString += movieArray.movies[i].genres[j].genre_type;
                                 if (j != movieArray.movies[i].genres.length - 1)
                                     divString += ", ";
                             }
                     
                             divString += "</h5><br/>\n\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n" +                             
-                                "<button type='button' class='btn btn-secondary' onclick='showDetails(\"" + i + "\")'>View Details</button>\n" +
-                        "</div>\n" +
+                                "<button type='button' class='btn btn-secondary' onclick='showDetails(\"" + i + "\")'>View Details</button>\n";// +
+                                if (isLoggedIn && isAdmin) { 
+                                    divString += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick='removeMovie(\"" + 
+                                            movieArray.movies[i].movie_name + "\", \"" + movieArray.movies[i].movie_id + "\")'>Delete Movie</button>";
+                                }
+
+                        divString += "</div>\n" +
                         "<hr>\n" +
                     "</div>\n" +
                 "</div>\n";
@@ -112,11 +118,40 @@
             document.getElementById("movies").innerHTML = divString;
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
         }
+
+        function removeMovie(movie_name, movie_id)
+        {
+            if (confirm("Are you sure you want to delete the movie '" + movie_name + "'??"))
+            {
+                $.post("/project02/delete/movie", {movieId: movie_id}, function(stuff) {
+                    if (stuff.success == true) {
+                        // call the onload function so that the item is removed from the list
+                        query();
+
+                        document.getElementById("message").innerHTML = '<div class="alert alert-success text-center">' +
+                                '<strong>Successfully removed "' + movie_name + '".</strong>' +
+                            '</div>';
+
+                        // scroll back to top of page so that user sees the message
+                        window.scrollTo(0, 0);
+                    }
+                    else {
+                        document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
+                                '<strong>Failed to remove "' + movie_name + '".</strong>' +
+                            '</div>';
+                            
+                        // scroll back to top of page so that user sees the message
+                        window.scrollTo(0, 0);
+                    }
+                });
+            }
+        }
     </script>
 </head>
 <body onload="query()">
     <% include ../../partials/project02/navbar.ejs %>
     <!--navbar goes here-->
+    <div id="message"></div>
     <br/><div id="div" class="text-center"><h2>Movie Selections</h2></div><br/><hr>
 
     <h3 id="loadingText" class="text-center">Loading the movies ...</h3>
@@ -125,54 +160,59 @@
     <script>
         $("#navbarSubmit").click(function() {
             let searchWord = (document.getElementById("search").value).toLowerCase();
-            document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back ' +
-                '<h2>Search results for: ' + searchWord + '</a>';
+            document.getElementById("div").innerHTML = '<h2>Search results for: "' + searchWord + '"</h2>' +
+                '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back</a>';
 
             // search for the term in the movie list
-            let searchList = [];
             let indexList = [];
             movieArray.movies.forEach(function(movie, index) {
+                let notFound = true;
+
                 if ((((movie.movie_name).toLowerCase()).indexOf(searchWord) >= 0) ||
-                    (((movie.movie_summary).toLowerCase()).indexOf(searchWord) >= 0) ||
+                    // I could have it search the summary too, but that seemed confusing
+                    //(((movie.movie_summary).toLowerCase()).indexOf(searchWord) >= 0) ||    
                     (((movie.movie_rating).toLowerCase()).indexOf(searchWord) >= 0)) {
-                        searchList.push(movie);
                         indexList.push(index);
+                        notFound = false;
                         return; // breaks out of one iteration of loop and continues with the next iteration
                     }
                 else {
                     // search through directors
-                    movie.directors.forEach(function(director, index) {
-                        if (((director).toLowerCase()).indexOf(searchWord)  >= 0) {
-                            searchList.push(movie);
-                            indexList.push(index);
-                            return; // breaks out of one iteration of loop and continues with the next iteration
-                        }
-                    });
+                    if (notFound)
+                        movie.directors.forEach(function(director, count) {
+                            if (((director.director_name).toLowerCase()).indexOf(searchWord)  >= 0) {
+                                indexList.push(index);
+                                notFound = false;
+                                return; // breaks out of one iteration of loop and continues with the next iteration
+                            }
+                        });
 
                     // actors
-                    movie.actors.forEach(function(actor, index) {
-                        if (((actor).toLowerCase()).indexOf(searchWord)  >= 0) {
-                            searchList.push(movie);
-                            indexList.push(index);
-                            return; // breaks out of one iteration of loop and continues with the next iteration
-                        }
-                    });
+                    if (notFound)
+                        movie.actors.forEach(function(actor, count) {
+                            if (((actor.actor_name).toLowerCase()).indexOf(searchWord)  >= 0) {
+                                indexList.push(index);
+                                notFound = false;
+                                return; // breaks out of one iteration of loop and continues with the next iteration
+                            }
+                        });
 
                     // genres
-                    movie.genres.forEach(function(genre, index) {
-                        if (((genre).toLowerCase()).indexOf(searchWord)  >= 0) {
-                            searchList.push(movie);
-                            indexList.push(index);
-                            return; // breaks out of one iteration of loop and continues with the next iteration
-                        }
-                    });
+                    if (notFound)
+                        movie.genres.forEach(function(genre, count) {
+                            if (((genre.genre_type).toLowerCase()).indexOf(searchWord)  >= 0) {
+                                indexList.push(index);
+                                notFound = false;
+                                return; // breaks out of one iteration of loop and continues with the next iteration
+                            }
+                        });
                 }
             });
 
             // we should now have all the movies with something matching the search word -> display them
             let divString = "";
 
-            searchList.forEach(function(item, index) {
+            indexList.forEach(function(item, index) {
                 divString += addToDivString(indexList[index]);
             });
 

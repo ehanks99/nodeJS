@@ -41,6 +41,9 @@
                     document.getElementById("message").innerHTML = '<div class="alert alert-danger text-center">' +
                             '<strong>Failed to log in with that username and password. Maybe you misspelled something?</strong>' +
                         '</div>';
+
+                    document.getElementById("pswrd").value = "";
+
                     return;
                 }
                 else {
@@ -48,8 +51,6 @@
                 }
             });
 
-            // the request has been sent off -> clear the password field
-            $("#pswrd").val() = "";
         });
     </script>
 </body>

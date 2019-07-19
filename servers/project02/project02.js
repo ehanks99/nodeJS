@@ -80,15 +80,13 @@ router.post("/project02/delete/rating", emptyMovieSession, setData.deleteRating)
 
 router.get("/project02/movies", getData.getMovies);
 router.get("/project02/allmovies", getData.getAllMovies);
-router.post("/project02/movie", emptyMovieSession, setData.insertNewMovie);
+router.post("/project02/insert/movie", emptyMovieSession, setData.insertNewMovie);
+router.post("/project02/delete/movie", emptyMovieSession, setData.deleteMovie);
 
 /* EVERY TIME that we update or insert data, we need to empty the session so that the
    movie list and data can be updated the next time the page is loaded */
 function emptyMovieSession(request, response, next) {
     request.session.dataList = "";
-    /*if (request.session.dataList != "") {
-		    request.session.destroy();
-    }*/
 
     //console.log("continuing on to next function");
     next();

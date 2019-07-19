@@ -11,11 +11,13 @@ let url = require("url");
 
 
 function collectAllMovieData(request, response) {
+    // I'm planning to modify this entire function (plus the chain-linked functions) to make it cleaner
+
     console.log("Getting all movie information.");
 
     // If we still have the data saved in our session variable, we'll just return that
     if (request.session.dataList && request.session.dataList != "") {
-        console.log("\n\nThe movie list was saved in our session - grabbing that\n\n");
+        console.log("\nThe movie list was saved in our session - grabbing that\n");
         response.json({success:true, "movieArray": req.session.dataList}); 
         return;
     }
