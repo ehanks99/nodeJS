@@ -92,7 +92,7 @@ function signUp(request, response) {
         console.log(plainTextPassword + "   " + hash);
 
         let sql = "INSERT INTO login_info (login_info_id, username, pswrd, email, first_name, last_name, is_admin) " +
-                  "VALUES (nextval('login_info_s1'), $1, $2, $3, $4, $5, 'Y')";
+                  "VALUES (nextval('login_info_s1'), $1, $2, $3, $4, $5, 'N')";
         let params = [username, hash, email, firstName, lastName];
         
         // send the sql query and params to be executed
@@ -103,6 +103,8 @@ function signUp(request, response) {
             }
             else {
                 console.log("successfully inserted user");
+                // log the user in
+                request.session.isLoggedIn = true;
                 response.json({success: true});
             }
         });
@@ -118,6 +120,14 @@ function getLoginStatus(request, response) {
         admin = true;
 
     response.json({isLoggedIn: loggedIn, isAdmin: admin});
+}
+
+function logoutOfSession(request, response) {
+    // clear the login session variables
+    request.session.isLoggedIn = false;
+    request.session.isAdmin = false;
+
+    response.json({success: true});
 }
 
 function isUniqueUsername(request, response) {
@@ -140,5 +150,6 @@ module.exports = {
     validateLogin: validateLogin,
     signUp: signUp,
     getLoginStatus: getLoginStatus,
-    isUniqueUsername: isUniqueUsername
+    isUniqueUsername: isUniqueUsername,
+    logout: logout
 }

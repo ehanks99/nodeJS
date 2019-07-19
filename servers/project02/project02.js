@@ -73,6 +73,7 @@ router.get("/project02/rand", function(req, res) {
 */
 
 router.get("/project02/loggedIn", signUp.getLoginStatus);
+router.get("/project02/logout", signUp.logout);
 router.post("/project02/validate/login", signUp.validateLogin);
 router.post("/project02/validate/signUp", signUp.signUp);
 router.post("/project02/isUniqueUsername", signUp.isUniqueUsername);

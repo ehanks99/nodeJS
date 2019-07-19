@@ -1,3 +1,17 @@
+    <script>
+        let isLoggedIn = false;
+        let isAdmin = false;
+
+        $.get("/project02/loggedIn", function(returnedInfo) {
+                if (returnedInfo.isLoggedIn == true) {
+                    isLoggedIn = true;
+                }
+                if (returnedInfo.isAdmin == true) {
+                    isAdmin = true;
+                }
+        });
+    </script>
+    
     <div class="myNavbar">
         <a class="active" href="/project02/mainPage">Home Page</a>
     
