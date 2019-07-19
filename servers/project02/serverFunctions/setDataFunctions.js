@@ -247,7 +247,7 @@ function insertActor(movieName, actor) {
             params = [actor];
 
             runQuery(sql, params, function(er, re) {
-                if (er) console.log("ERROR inserting new actor"); 
+                if (er) console.log("ERROR inserting new actor: " + er); 
                 else console.log("inserted new actor");
             });
         }
