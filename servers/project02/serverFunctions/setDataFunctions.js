@@ -254,9 +254,10 @@ function insertActor(movieName, actor) {
 
         console.log("actor: " + actor);
         sql = "INSERT INTO movie_to_starring_actor (movie_actor_id, movie_id, actor_id) " +
-                "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
-                "(SELECT actor_id FROM starring_actor WHERE actor_name = $2))";
-        params = [movieName, actor];
+                "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = '" + movieName + "' " +//$1), " +
+                "(SELECT actor_id FROM starring_actor WHERE actor_name = '" + actor + "'));";//$2))";
+        //params = [movieName, actor];
+        params = [];
         console.log("movieName: " + movieName);
         console.log("actor: " + actor);
 
