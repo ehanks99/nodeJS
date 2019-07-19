@@ -21,7 +21,7 @@
         function setDivToMovieList() {
             var divString = "";
             for(var i = 0; i < movieArray.movies.length; i++) {
-                divString += setMovies(i, divString);
+                divString += setMovies(i);
             }
 
             document.getElementById("loadingText").innerHTML = "";
@@ -29,8 +29,8 @@
             document.getElementById("div").innerHTML = '<h2>Movie Selections</h2>';
         }
 
-        function addToDivString(i, divString) {
-            divString += "<div class='row'>\n" +
+        function addToDivString(i) {
+            let string = "<div class='row'>\n" +
                 "<div class='col-md-2'><p></p></div>\n" +
                     "<div class='col-md-8'>\n" +
                         "<div class = 'pull-left'>\n" +
@@ -71,7 +71,7 @@
                     "</div>\n" +
                 "</div>\n";
 
-                return divString;
+            return string;
         }
 
         function showDetails(index) {
