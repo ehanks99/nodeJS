@@ -123,7 +123,7 @@
     <div id="movies"></div>
 
     <script>
-        document.getElementById("navbarSubmit").click(function() {
+        $("#navbarSubmit").click(function() {
             let searchWord = strtolower(document.getElementById("search").value);
             document.getElementById("div").innerHTML = '<a onclick="setDivToMovieList()" class="previous">&laquo; Go Back ' +
                 '<h2>Search results for: ' + searchWord + '</a>';
