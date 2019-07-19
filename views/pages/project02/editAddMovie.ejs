@@ -89,15 +89,18 @@
         document.getElementById("defaultOpen").click();
 
         $("#submitButton").click(function() {
-            var url = "/project02/insert/movie";
-            var stuff = document.getElementsByName("director[]");//$('[name="director[]"]');
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: JSON.stringify($("#form").serialize()), // serializes the form's elements.
-                success: function(results)
-                {
-                    //alert(data); // show response from the php script.
+            let directors = $.map(($('[name="director[]"]')), function(n)  { return n.value; } );
+            let actors = $.map(($('[name="actor[]"]')), function(n)  { return n.value; } );
+            let genres = $.map(($('[name="genre[]"]:checked')), function(n)  { return n.value; } );
+        
+            $.post("/project02/insert/movie", {
+                movieName: $("#movieName").val(),
+                summary: $("#summary").val(),
+                rated: $("#rated").val(),
+                director: directors,
+                actor: actors,
+                genre: genres
+            }, function(results) {
                     if (results.success) {
                         document.getElementById("message").innerHTML = '<div class="alert alert-success text-center">' +
                             '<strong>Success</strong>' +
@@ -117,9 +120,8 @@
                         // scroll back to top of page so that user sees the message
                         window.scrollTo(0, 0);
                     }
-                }
-            });
-        
+                });
+
             return false; // avoid the actual submit of the form.
         });
     </script>

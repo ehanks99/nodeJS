@@ -150,9 +150,7 @@ function insertNewMovie(request, response) {
     let directors = request.body["director[]"];
     let actors = request.body["actor[]"];
     let genres = request.body["genre[]"];
-    console.log(request.body);
-    console.log(directors);
-
+    
     // first, check if the movie is already in the DB
     let sql = "SELECT movie_id FROM movie WHERE movie_name = $1";
     let params = [movieName];
@@ -170,6 +168,8 @@ function insertNewMovie(request, response) {
             params = [movieName, movieRating, movieSummary];
 
             runQuery(sql, params, function(err, res) {
+                if (err) console.log("there was an error inserting the movie name");
+                else console.log("there was no error inserting the movie name");
                 // now, push all of our actors and directors into the database 
                 // and connect them to the movieName (if they're already there, it shouldn't insert them)
                 if (Array.isArray(directors)) {
@@ -208,32 +208,59 @@ function insertNewMovie(request, response) {
 }
 
 function insertDirector(movieName, director) {
-    let sql = "INSERT INTO director (director_id, director_name) " +
-            "VALUES (nextval('director_s1'), $1)";
+    // first make sure that the director isn't in the table before we try inserting it
+    let sql = "SELECT director_id FROM director WHERE director_name = $1";
     let params = [director];
 
-    runQuery(sql, params, function(er, re) {
+    runQuery(sql, params, function(error, result) {
+        if (!result || result.rows == 0) {
+            sql = "INSERT INTO director (director_id, director_name) " +
+                    "VALUES (nextval('director_s1'), $1)";
+            params = [director];
+            runQuery(sql, params, function(er, re) {
+                if (er) console.log("ERROR inserting new dirctor"); 
+                else console.log("inserted new dirctor");
+            });
+        }
+    
         sql = "INSERT INTO movie_to_director (movie_director_id, movie_id, director_id) " +
             "VALUES (nextval('movie_to_director_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
             "(SELECT director_id FROM director WHERE director_name = $2))";
         params = [movieName, director];
 
-        runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_director row"); });
+        runQuery(sql, params, function(e, r) {
+            if (e) console.log("ERROR inserting a movie_to_director row"); 
+            else console.log("inserted a movie_to_director row"); 
+        });
     });
 }
 
 function insertActor(movieName, actor) {
-    let sql = "INSERT INTO starring_actor (actor_id, actor_name) " +
-            "VALUES (nextval('starring_actor_s1'), $1)";
+    // first make sure that the director isn't in the table before we try inserting it
+    let sql = "SELECT actor_id FROM starring_actor WHERE actor_name = $1";
     let params = [actor];
 
-    runQuery(sql, params, function(er, re) {
+    runQuery(sql, params, function(error, result) {
+        if (!result || result.rows == 0) {
+            sql = "INSERT INTO starring_actor (actor_id, actor_name) " +
+                    "VALUES (nextval('starring_actor_s1'), $1)";
+            params = [actor];
+
+            runQuery(sql, params, function(er, re) {
+                if (er) console.log("ERROR inserting new actor"); 
+                else console.log("inserted new actor");
+            });
+        }
+
         sql = "INSERT INTO movie_to_starring_actor (movie_actor_id, movie_id, actor_id) " +
                 "VALUES (nextval('movie_to_starring_actor_s1'), (SELECT movie_id FROM movie WHERE movie_name = $1), " +
                 "(SELECT actor_id FROM starring_actor WHERE actor_name = $2))";
         params = [movieName, actor];
 
-        runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_starring_actor row"); });
+        runQuery(sql, params, function(e, r) { 
+            if (e) console.log("ERROR inserting a movie_to_starring_actor row"); 
+            else console.log("inserted a movie_to_starring_actor row"); 
+        });
     });
 }
 
@@ -244,7 +271,9 @@ function insertGenre(movieName, genre) {
             "(SELECT genre_id FROM genre WHERE genre_type = $2))";
     let params = [movieName, genre];
 
-    runQuery(sql, params, function(e, r) { console.log("inserted a movie_to_genre row"); });
+    runQuery(sql, params, function(e, r) { 
+        if (e) console.log("ERROR inserting a movie_to_genre row"); 
+        else console.log("inserted a movie_to_genre row"); });
 }
 
 function deleteMovie(request, response) {
