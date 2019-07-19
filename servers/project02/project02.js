@@ -36,6 +36,7 @@ router.get("/project02/signUp", function(request, response) {
 
 router.get("/project02/edit-add/:page", function(request, response) {
     let page = request.params.page;
+    console.log("got request for /project02/edit-add/" + page);
     
     if (page == "movie") {
         response.render("pages/project02/editAddMovie.ejs");
