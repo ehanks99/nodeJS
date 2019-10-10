@@ -9,7 +9,6 @@ let numRows = 20;
 
 let url = require("url");
 
-
 function collectAllMovieData(request, response) {
     // I'm planning to modify this entire function (plus the chain-linked functions) to make it cleaner
 
